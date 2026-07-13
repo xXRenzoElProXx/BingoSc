@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="author" content="Seguidores de Cristo" />
+    <meta name="description" content="Bingo digital para acompañar dinámicas de Seguidores de Cristo. Funciona sin conexión." />
+    <title>Bingo · Seguidores de Cristo</title>
+
+    <!-- PWA: manifest e íconos -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#150f2e" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+    <!-- PWA: soporte iOS (Safari no lee el manifest para estos ajustes) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Bingo SDC" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <link rel="stylesheet" href="vendor/fonts/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- Fondo decorativo: orbes difuminados -->
+    <div class="orbes" aria-hidden="true">
+        <span class="orbe orbe-1"></span>
+        <span class="orbe orbe-2"></span>
+        <span class="orbe orbe-3"></span>
+    </div>
+
+    <!-- Fondo decorativo: destellos flotando -->
+    <div class="destellos" aria-hidden="true">
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+        <span class="destello"></span>
+    </div>
+
+    <main class="wrapper">
+        <div class="bingo-container">
+
+            <header class="encabezado">
+                <div class="logo-chip" aria-hidden="true"><i class="fa-solid fa-cross"></i></div>
+                <h1 class="titulo">BINGO</h1>
+                <p class="subtitulo">Seguidores de Cristo</p>
+            </header>
+
+            <!-- Paso 1: elegir figura -->
+            <section id="figura-container" class="tarjeta-paso">
+                <label for="figura" class="etiqueta"><i class="fa-solid fa-star" aria-hidden="true"></i> Selecciona la figura a jugar</label>
+
+                <div class="select-custom" id="select-custom">
+                    <button type="button" class="select-trigger" id="select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="select-trigger-texto">Ninguna</span>
+                        <svg class="select-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <ul class="select-opciones" id="select-opciones" role="listbox" tabindex="-1"></ul>
+                </div>
+
+                <!-- select nativo oculto: mantiene la lógica original (id="figura") intacta -->
+                <select id="figura" class="select-oculto" aria-hidden="true" tabindex="-1">
+                    <option value="ninguna">Ninguna</option>
+                    <option value="apagon">APAGON</option>
+                    <option value="c">C</option>
+                    <option value="cuadrado">CUADRADO</option>
+                    <option value="e">E</option>
+                    <option value="f">F</option>
+                    <option value="fila-b">FILA B</option>
+                    <option value="fila-i">FILA I</option>
+                    <option value="fila-n">FILA N</option>
+                    <option value="fila-g">FILA G</option>
+                    <option value="fila-o">FILA O</option>
+                    <option value="g">G</option>
+                    <option value="h">H</option>
+                    <option value="i">I</option>
+                    <option value="l">L</option>
+                    <option value="m">M</option>
+                    <option value="n">N</option>
+                    <option value="p">P</option>
+                    <option value="s">S</option>
+                    <option value="t">T</option>
+                    <option value="u">U</option>
+                    <option value="cruz">CRUZ</option>
+                </select>
+
+                <button class="boton boton-primario" onclick="generarFigura()">
+                    <i class="fa-solid fa-shapes" aria-hidden="true"></i>
+                    <span>Generar Figura</span>
+                </button>
+            </section>
+
+            <!-- Paso 2: jugar -->
+            <section id="bingo-board-container" class="tarjeta-paso" style="display: none">
+                <div id="bingo-board" class="bingo-board"></div>
+
+                <div id="figura-seleccionada" class="badge-figura" style="display: none">
+                    <span class="badge-figura-etiqueta"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Figura seleccionada</span>
+                    <span class="badge-figura-valor" id="figura-seleccionada-text"></span>
+                </div>
+
+                <label for="numero" class="etiqueta"><i class="fa-solid fa-hashtag" aria-hidden="true"></i> Ingresa un número <span class="etiqueta-rango">(1–75)</span></label>
+                <input autofocus type="number" id="numero" class="input-numero" min="1" max="75"
+                    inputmode="numeric" placeholder="—" oninput="habilitarBotonMarcar()" />
+
+                <div class="fila-botones">
+                    <button id="btn-marcar" class="boton boton-marcar" onclick="manejarIngresoNumero()" disabled>
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        <span>Marcar</span>
+                    </button>
+                    <button class="boton boton-secundario" onclick="elegirOtraFigura()">
+                        <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+                        <span>Cambiar Figura</span>
+                    </button>
+                </div>
+            </section>
+
+            <div id="ganaste-message" style="display: none">
+                <h2 class="mensaje-gano">
+                    <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+                    ¡GANASTE!
+                    <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+                </h2>
+            </div>
+
+        </div>
+
+        <footer class="pie">
+            Bingo digital · Seguidores de Cristo
+            <button type="button" id="btn-como-instalar" class="enlace-instalar" hidden>
+                <i class="fa-solid fa-download" aria-hidden="true"></i> ¿Cómo instalar la app?
+            </button>
+        </footer>
+    </main>
+
+    <!-- Banner: instalar la app -->
+    <div id="pwa-instalar" class="pwa-banner" role="dialog" aria-live="polite" hidden>
+        <div class="pwa-banner-icono"><i class="fa-solid fa-download" aria-hidden="true"></i></div>
+        <div class="pwa-banner-texto">
+            <p class="pwa-banner-titulo">Instala Bingo SDC</p>
+            <p class="pwa-banner-detalle" id="pwa-instalar-detalle">Úsalo sin conexión, directo desde tu pantalla de inicio.</p>
+        </div>
+        <div class="pwa-banner-acciones">
+            <button type="button" class="pwa-banner-btn pwa-banner-btn-primario" id="pwa-instalar-btn">Instalar</button>
+            <button type="button" class="pwa-banner-btn pwa-banner-btn-cerrar" id="pwa-instalar-cerrar" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Banner: nueva versión disponible -->
+    <div id="pwa-actualizar" class="pwa-banner pwa-banner-update" role="dialog" aria-live="polite" hidden>
+        <div class="pwa-banner-icono"><i class="fa-solid fa-rotate" aria-hidden="true"></i></div>
+        <div class="pwa-banner-texto">
+            <p class="pwa-banner-titulo">Nueva versión disponible</p>
+            <p class="pwa-banner-detalle">Actualiza para tener las últimas mejoras.</p>
+        </div>
+        <div class="pwa-banner-acciones">
+            <button type="button" class="pwa-banner-btn pwa-banner-btn-primario" id="pwa-actualizar-btn">Actualizar</button>
+        </div>
+    </div>
+
+    <script src="Datos/figuras.js"></script>
+    <script src="Datos/cartillas.js"></script>
+    <script src="Scripts/script.js"></script>
+    <script src="Scripts/confetti.js"></script>
+    <script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="Scripts/select-custom.js"></script>
+    <script src="Scripts/pwa.js"></script>
+</body>
+
+</html>
