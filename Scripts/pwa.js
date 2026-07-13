@@ -19,13 +19,6 @@ function esIOS() {
     return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
 }
 
-/* Navegadores "in-app" (WhatsApp, Instagram, Facebook, TikTok...) bloquean
-   la instalación de PWAs aunque el resto del sitio funcione normal. */
-function esNavegadorEmbebido() {
-    const ua = window.navigator.userAgent.toLowerCase();
-    return /fban|fbav|instagram|whatsapp|tiktok|line\/|micromessenger/i.test(ua);
-}
-
 function ocultarBannerTemporalmente(dias) {
     const hasta = Date.now() + dias * 24 * 60 * 60 * 1000;
     try {
@@ -151,53 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
         });
     }
-
-    configurarBotonComoInstalar();
 });
-
-/* ---------------------------------------------------------
-   Botón permanente "¿Cómo instalar la app?"
-   Existe siempre en el pie de página, sin depender del banner
-   automático (que en iOS/navegadores in-app puede no aparecer
-   o quedar oculto por decisión previa del usuario).
-   --------------------------------------------------------- */
-function configurarBotonComoInstalar() {
-    const btn = document.getElementById('btn-como-instalar');
-    if (!btn) return;
-
-    if (estaEnModoStandalone()) return; // ya está instalada, no hace falta
-    btn.hidden = false;
-
-    btn.addEventListener('click', async () => {
-        // Android / Chrome / Edge: si el navegador ya ofreció instalar, usamos ese prompt nativo.
-        if (eventoInstalacionDiferido) {
-            eventoInstalacionDiferido.prompt();
-            const { outcome } = await eventoInstalacionDiferido.userChoice;
-            eventoInstalacionDiferido = null;
-            if (outcome === 'accepted') return;
-        }
-
-        let texto;
-        if (esIOS()) {
-            texto = 'Toca el ícono <b>Compartir</b> (el cuadrado con la flecha hacia arriba) en la barra de Safari y luego elige <b>"Agregar a inicio"</b>.';
-        } else if (esNavegadorEmbebido()) {
-            texto = 'Este enlace se abrió dentro de otra app (WhatsApp, Instagram, etc.), y esos navegadores no permiten instalar apps. Toca el menú (⋮) y elige <b>"Abrir en el navegador"</b>, y desde ahí instala.';
-        } else {
-            texto = 'Abre el menú de tu navegador (⋮ o ···) y busca la opción <b>"Instalar aplicación"</b> o <b>"Agregar a pantalla de inicio"</b>.';
-        }
-
-        if (window.Swal) {
-            window.Swal.fire({
-                title: 'Instalar Bingo SDC',
-                html: texto,
-                icon: 'info',
-                confirmButtonText: 'Entendido',
-            });
-        } else {
-            alert(texto.replace(/<\/?b>/g, ''));
-        }
-    });
-}
 
 function mostrarBannerInstalacion({ detalle, textoBoton, alHacerClicInstalar }) {
     const banner = document.getElementById('pwa-instalar');

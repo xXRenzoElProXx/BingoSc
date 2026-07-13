@@ -229,29 +229,7 @@ body {
   gap: 6px;
 }
 
-.enlace-instalar {
-  border: none;
-  background: none;
-  padding: 4px 8px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--accent-gold);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: pointer;
-  opacity: 0.85;
-  transition: opacity 0.2s var(--ease);
-}
 
-.enlace-instalar:hover,
-.enlace-instalar:focus-visible {
-  opacity: 1;
-}
-
-.enlace-instalar[hidden] {
-  display: none;
-}
 
 /* =========================================================
    ENCABEZADO
