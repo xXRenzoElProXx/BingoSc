@@ -57,7 +57,7 @@ body {
   padding: 16px 16px calc(28px + env(safe-area-inset-bottom));
   padding-left: calc(16px + env(safe-area-inset-left));
   padding-right: calc(16px + env(safe-area-inset-right));
-  transition: padding-bottom 0.3s var(--ease);
+  transition: padding-top 0.3s var(--ease);
 
   background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 55%, var(--bg-violet) 100%);
   background-size: 200% 200%;
@@ -178,8 +178,12 @@ body {
   .orbe-2 { width: 260px; height: 260px; }
   .orbe-3 { width: 200px; height: 200px; }
 
+  .wrapper {
+    transform: translateY(-18px);
+  }
+
   body.tiene-banner-pwa {
-    padding-bottom: calc(170px + env(safe-area-inset-bottom));
+    padding-top: calc(170px + env(safe-area-inset-top));
   }
 }
 
@@ -643,11 +647,12 @@ body {
   }
 
   body.tiene-banner-pwa {
-    padding-bottom: calc(190px + env(safe-area-inset-bottom));
+    padding-top: calc(190px + env(safe-area-inset-top));
   }
 
   .wrapper {
     gap: 14px;
+    transform: translateY(-22px);
   }
 
   .bingo-container {
@@ -763,7 +768,7 @@ body {
 .pwa-banner {
   position: fixed;
   left: 50%;
-  bottom: calc(18px + env(safe-area-inset-bottom));
+  top: calc(18px + env(safe-area-inset-top));
   transform: translate(-50%, 0);
   z-index: 1000;
   display: flex;
@@ -785,7 +790,7 @@ body {
 }
 
 @keyframes entrarBanner {
-  from { opacity: 0; transform: translate(-50%, 16px); }
+  from { opacity: 0; transform: translate(-50%, -16px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
