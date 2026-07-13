@@ -11,7 +11,7 @@
  * el número de versión aquí, la app seguirá sirviendo la versión cacheada
  * anterior.
  */
-const CACHE_VERSION = 'v6';
+const CACHE_VERSION = 'v7';
 const CACHE_NAME = `bingo-sdc-${CACHE_VERSION}`;
 
 // Rutas relativas a la raíz del sitio. Deben coincidir exactamente con
