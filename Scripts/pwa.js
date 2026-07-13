@@ -3,7 +3,7 @@
  * "Nueva versión disponible".
  */
 
-const PWA_STORAGE_KEY = 'bingoSdcInstalarOcultoHasta';
+const PWA_STORAGE_KEY = 'bingoSdcInstalarOcultoEnEstaSesion';
 
 function estaEnModoStandalone() {
     return (
@@ -19,10 +19,9 @@ function esIOS() {
     return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
 }
 
-function ocultarBannerTemporalmente(dias) {
-    const hasta = Date.now() + dias * 24 * 60 * 60 * 1000;
+function ocultarBannerPorEstaSesion() {
     try {
-        localStorage.setItem(PWA_STORAGE_KEY, String(hasta));
+        sessionStorage.setItem(PWA_STORAGE_KEY, '1');
     } catch (e) {
         /* almacenamiento no disponible: no pasa nada, solo no se recordará */
     }
@@ -30,8 +29,7 @@ function ocultarBannerTemporalmente(dias) {
 
 function bannerDeInstalacionFueOcultado() {
     try {
-        const hasta = parseInt(localStorage.getItem(PWA_STORAGE_KEY), 10);
-        return !isNaN(hasta) && Date.now() < hasta;
+        return sessionStorage.getItem(PWA_STORAGE_KEY) === '1';
     } catch (e) {
         return false;
     }
@@ -119,7 +117,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
             eventoInstalacionDiferido = null;
             ocultarElementoBanner('pwa-instalar');
             if (outcome !== 'accepted') {
-                ocultarBannerTemporalmente(3);
+                ocultarBannerPorEstaSesion();
             }
         },
     });
@@ -140,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             textoBoton: 'Entendido',
             alHacerClicInstalar: () => {
                 ocultarElementoBanner('pwa-instalar');
-                ocultarBannerTemporalmente(14);
+                ocultarBannerPorEstaSesion();
             },
         });
     }
@@ -161,7 +159,7 @@ function mostrarBannerInstalacion({ detalle, textoBoton, alHacerClicInstalar }) 
     const manejarInstalar = () => alHacerClicInstalar();
     const manejarCerrar = () => {
         ocultarElementoBanner('pwa-instalar');
-        ocultarBannerTemporalmente(7);
+        ocultarBannerPorEstaSesion();
     };
 
     btnInstalar.addEventListener('click', manejarInstalar, { once: true });
