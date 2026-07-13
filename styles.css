@@ -21,6 +21,16 @@
   --radius-md: 16px;
   --radius-sm: 10px;
 
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  --shadow-elevated: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --shadow-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --ring-focus: 0 0 0 3px rgba(255, 209, 102, 0.35);
+
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   --font-display: "Fredoka", "Segoe UI", sans-serif;
@@ -49,6 +59,7 @@ body {
   min-height: 100dvh;
   font-family: var(--font-body);
   color: var(--text-light);
+  line-height: 1.5;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -57,17 +68,25 @@ body {
   padding: 16px 16px calc(28px + env(safe-area-inset-bottom));
   padding-left: calc(16px + env(safe-area-inset-left));
   padding-right: calc(16px + env(safe-area-inset-right));
-  transition: padding-top 0.3s var(--ease);
+  transition: padding-top 0.3s var(-- ease);
 
   background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 55%, var(--bg-violet) 100%);
   background-size: 200% 200%;
   animation: derivaFondo 18s ease-in-out infinite;
+  will-change: background-position;
 }
 
 @keyframes derivaFondo {
   0% { background-position: 0% 0%; }
   50% { background-position: 100% 100%; }
   100% { background-position: 0% 0%; }
+}
+
+/* Reserva espacio arriba cuando hay un banner PWA visible, para que no
+   se superponga con la tarjeta (pantallas > 700px; los media queries de
+   abajo ajustan este valor para tablets/móviles). */
+body.tiene-banner-pwa {
+  padding-top: calc(90px + env(safe-area-inset-top));
 }
 
 .orbes {
@@ -148,6 +167,7 @@ body {
   box-shadow: 0 0 10px 2px currentColor;
   opacity: 0;
   animation: elevarDestello 11s ease-in infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes elevarDestello {
@@ -171,9 +191,17 @@ body {
 @media (max-width: 480px) {
   .destello:nth-child(9),
   .destello:nth-child(10) { display: none; }
+
+  .destello {
+    box-shadow: 0 0 6px 1px currentColor;
+  }
 }
 
 @media (max-width: 700px) {
+  .orbe {
+    filter: blur(36px);
+  }
+
   .orbe-1 { width: 280px; height: 280px; }
   .orbe-2 { width: 260px; height: 260px; }
   .orbe-3 { width: 200px; height: 200px; }
@@ -211,12 +239,11 @@ body {
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-elevated), var(--shadow-inset-highlight);
   padding: 36px 30px 32px;
   text-align: center;
   animation: apareceCard 0.7s var(--ease) both;
+  will-change: opacity, transform;
 }
 
 @keyframes apareceCard {
@@ -240,7 +267,7 @@ body {
    ENCABEZADO
    ========================================================= */
 .encabezado {
-  margin-bottom: 28px;
+  margin-bottom: var(--space-xl);
 }
 
 .logo-chip {
@@ -255,6 +282,7 @@ body {
   background: linear-gradient(135deg, var(--accent-coral), var(--accent-gold));
   box-shadow: 0 8px 24px rgba(255, 107, 107, 0.35);
   animation: pulsoLogo 3.2s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes pulsoLogo {
@@ -267,6 +295,7 @@ body {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 42px;
+  line-height: 1.15;
   letter-spacing: 0.04em;
   background: linear-gradient(90deg, var(--accent-gold), var(--accent-coral) 60%, var(--accent-teal));
   -webkit-background-clip: text;
@@ -275,8 +304,9 @@ body {
 }
 
 .subtitulo {
-  margin: 4px 0 0;
+  margin: var(--space-xs) 0 0;
   font-size: 14px;
+  line-height: 1.4;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -287,19 +317,22 @@ body {
    ========================================================= */
 .tarjeta-paso {
   animation: apareceCard 0.5s var(--ease) both;
+  will-change: opacity, transform;
 }
 
 .etiqueta {
   display: flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  gap: var(--space-xs);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 13px;
+  line-height: 1.3;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-sm);
 }
 
 .etiqueta i {
@@ -326,7 +359,7 @@ body {
 
 .select-custom {
   position: relative;
-  margin-bottom: 22px;
+  margin-bottom: var(--space-lg);
   text-align: left;
 }
 
@@ -354,7 +387,7 @@ body {
 
 .select-trigger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.4);
+  box-shadow: var(--ring-focus);
 }
 
 .select-chevron {
@@ -458,6 +491,11 @@ body {
   transform: translateY(1px) scale(0.98);
 }
 
+.boton:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-focus);
+}
+
 .boton:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -477,8 +515,8 @@ body {
 
 .fila-botones {
   display: flex;
-  gap: 14px;
-  margin-top: 20px;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 .boton-marcar {
@@ -512,12 +550,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-bottom: 22px;
-  padding: 14px 18px;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) var(--space-md);
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, rgba(45, 212, 191, 0.16), rgba(255, 209, 102, 0.1));
   border: 1px solid rgba(45, 212, 191, 0.35);
   animation: apareceCard 0.4s var(--ease) both, brilloBadge 3s ease-in-out infinite;
+  will-change: opacity, transform, box-shadow;
 }
 
 @keyframes brilloBadge {
@@ -574,7 +613,7 @@ body {
 .input-numero:focus {
   outline: none;
   border-color: var(--accent-gold);
-  box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.2);
+  box-shadow: var(--ring-focus);
 }
 
 /* bingo-board queda oculto: no se usa visualmente en este flujo,
@@ -587,26 +626,29 @@ body {
    MENSAJE GANASTE
    ========================================================= */
 .mensaje-gano {
-  margin: 22px 0 0;
+  margin: var(--space-lg) 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-sm);
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 30px;
+  line-height: 1.2;
   letter-spacing: 0.04em;
   background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: rebote 0.6s var(--ease);
+  will-change: transform, opacity;
 }
 
 .mensaje-gano i {
   color: var(--accent-gold);
   -webkit-text-fill-color: var(--accent-gold);
   animation: pulsoLogo 1.4s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes rebote {
@@ -652,27 +694,39 @@ body {
   }
 
   .wrapper {
-    gap: 14px;
+    gap: 12px;
     transform: translateY(-32px);
   }
 
   .bingo-container {
-    padding: 26px 18px 24px;
+    padding: 24px 16px 22px;
     border-radius: 22px;
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .select-opciones {
+    backdrop-filter: blur(10px);
   }
 
   .encabezado {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
 
   .logo-chip {
     width: 48px;
     height: 48px;
+    margin: 0 auto 8px;
     font-size: 22px;
+    box-shadow: 0 5px 14px rgba(255, 107, 107, 0.3);
   }
 
   .titulo {
     font-size: 32px;
+    overflow-wrap: break-word;
   }
 
   .subtitulo {
@@ -681,6 +735,10 @@ body {
 
   .etiqueta {
     font-size: 12px;
+  }
+
+  .select-custom {
+    margin-bottom: 18px;
   }
 
   .select-trigger {
@@ -693,8 +751,22 @@ body {
   }
 
   .boton {
-    padding: 14px 20px;
-    font-size: 14px;
+    padding: 13px 18px;
+    font-size: 13px;
+  }
+
+  .boton-primario {
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
+  }
+
+  .boton-marcar {
+    box-shadow: 0 6px 16px rgba(255, 209, 102, 0.25);
+  }
+
+  .fila-botones {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
   }
 
   .input-numero {
@@ -702,16 +774,25 @@ body {
     padding: 16px;
   }
 
-  .badge-figura-valor {
-    font-size: 18px;
+  .badge-figura {
+    margin-bottom: 18px;
+    padding: 12px 14px;
   }
 
-  .fila-botones {
-    flex-direction: column;
+  .badge-figura-valor {
+    font-size: 18px;
+    overflow-wrap: break-word;
   }
 
   .mensaje-gano {
+    margin-top: 18px;
     font-size: 24px;
+    overflow-wrap: break-word;
+  }
+
+  @keyframes brilloBadge {
+    0%, 100% { box-shadow: 0 0 0 rgba(45, 212, 191, 0); }
+    50% { box-shadow: 0 0 12px rgba(45, 212, 191, 0.18); }
   }
 }
 
@@ -721,7 +802,25 @@ body {
   }
 
   .bingo-container {
-    padding: 22px 14px 20px;
+    padding: 20px 12px 18px;
+  }
+
+  .etiqueta {
+    font-size: 11px;
+  }
+
+  .select-trigger {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .boton {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+
+  .badge-figura {
+    padding: 10px 12px;
   }
 
   .input-numero {
@@ -784,6 +883,7 @@ body {
   border-radius: var(--radius-md);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
   animation: entrarBanner 0.4s var(--ease) both;
+  will-change: opacity, transform;
 }
 
 .pwa-banner[hidden] {
@@ -856,6 +956,11 @@ body {
   transform: scale(0.96);
 }
 
+.pwa-banner-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-focus);
+}
+
 .pwa-banner-btn-primario {
   padding: 8px 14px;
   color: #241505;
@@ -889,6 +994,13 @@ body {
     padding: 10px;
     gap: 10px;
     flex-wrap: wrap;
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .swal2-popup {
+    backdrop-filter: blur(9px);
   }
 
   .pwa-banner-texto {

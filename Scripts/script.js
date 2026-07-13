@@ -225,15 +225,40 @@ function mostrarElemento(id) {
     }
 }
 
+// Caché de audios precargados para evitar el retraso de carga en el momento de reproducir.
+const cacheAudio = {};
+
+function precargarSonido(nombreArchivo) {
+    let audio = cacheAudio[nombreArchivo];
+    if (!audio) {
+        audio = new Audio(nombreArchivo);
+        audio.preload = 'auto';
+        audio.load();
+        cacheAudio[nombreArchivo] = audio;
+    }
+    return audio;
+}
+
 function reproducirSonido(nombreArchivo) {
-    const audio = new Audio(nombreArchivo);
+    const audio = precargarSonido(nombreArchivo);
     let reproducido = false;
 
     const intentarReproducir = () => {
         if (reproducido) return;
         reproducido = true;
+        try {
+            audio.currentTime = 0;
+        } catch {
+            // Si el audio aún no tiene metadata cargada, se ignora y se reproduce desde el inicio.
+        }
         audio.play().catch((err) => console.error('No se pudo reproducir el sonido:', err));
     };
+
+    // Si el audio ya está listo (por ejemplo, precargado con antelación), se reproduce de inmediato.
+    if (audio.readyState >= 3) {
+        intentarReproducir();
+        return;
+    }
 
     audio.addEventListener('canplaythrough', intentarReproducir, { once: true });
     audio.addEventListener('error', (e) => console.error('Error al cargar el archivo de audio:', e));
@@ -241,6 +266,9 @@ function reproducirSonido(nombreArchivo) {
     // Respaldo: si el evento canplaythrough tarda o no se dispara, se intenta igual.
     setTimeout(intentarReproducir, 400);
 }
+
+// Precarga temprana del sonido de victoria para que esté listo sin demora al ganar.
+precargarSonido('media/bingo-sound.mp3');
 
 const elegirOtraFigura = () => {
     mostrarElemento('figura-container');

@@ -11,7 +11,7 @@
  * el número de versión aquí, la app seguirá sirviendo la versión cacheada
  * anterior.
  */
-const CACHE_VERSION = 'v7';
+const CACHE_VERSION = 'v8';
 const CACHE_NAME = `bingo-sdc-${CACHE_VERSION}`;
 
 // Rutas relativas a la raíz del sitio. Deben coincidir exactamente con
@@ -43,16 +43,10 @@ const APP_SHELL = [
   './vendor/fonts/jetbrains-mono-latin-600-normal.woff2',
   './vendor/fonts/jetbrains-mono-latin-700-normal.woff2',
 
-  './vendor/fontawesome/css/all.min.css',
-  './vendor/fontawesome/webfonts/fa-solid-900.woff2',
-  './vendor/fontawesome/webfonts/fa-regular-400.woff2',
-  './vendor/fontawesome/webfonts/fa-brands-400.woff2',
-  './vendor/fontawesome/webfonts/fa-v4compatibility.woff2',
 
   './vendor/sweetalert2/sweetalert2.all.min.js',
 
   './media/bingo-sound.mp3',
-  './media/logo.ico',
 
   './icons/icon-72.png',
   './icons/icon-96.png',
@@ -102,19 +96,9 @@ self.addEventListener('fetch', (event) => {
   // Solo manejar peticiones GET.
   if (request.method !== 'GET') return;
 
-  // Peticiones de navegación (abrir/recargar la app, incluido el acceso
-  // directo instalado con "start_url"): siempre servir el index.html
-  // cacheado como respaldo, sin importar query strings.
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then((networkResponse) => {
-          const clone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', clone));
-          return networkResponse;
-        })
-        .catch(() => caches.match('./index.html'))
-    );
+  // Solo manejar peticiones http/https: otras (chrome-extension://, etc.)
+  // no se pueden guardar en la Cache API y deben dejarse pasar sin tocar.
+  if (!request.url.startsWith('http://') && !request.url.startsWith('https://')) {
     return;
   }
 
