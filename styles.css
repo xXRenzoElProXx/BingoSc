@@ -179,11 +179,11 @@ body {
   .orbe-3 { width: 200px; height: 200px; }
 
   .wrapper {
-    transform: translateY(-18px);
+    transform: translateY(-28px);
   }
 
   body.tiene-banner-pwa {
-    padding-top: calc(170px + env(safe-area-inset-top));
+    padding-top: calc(140px + env(safe-area-inset-top));
   }
 }
 
@@ -199,6 +199,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  transform: translateY(-24px);
 }
 
 .bingo-container {
@@ -647,12 +648,12 @@ body {
   }
 
   body.tiene-banner-pwa {
-    padding-top: calc(190px + env(safe-area-inset-top));
+    padding-top: calc(160px + env(safe-area-inset-top));
   }
 
   .wrapper {
     gap: 14px;
-    transform: translateY(-22px);
+    transform: translateY(-32px);
   }
 
   .bingo-container {
@@ -768,14 +769,14 @@ body {
 .pwa-banner {
   position: fixed;
   left: 50%;
-  top: calc(18px + env(safe-area-inset-top));
+  top: calc(14px + env(safe-area-inset-top));
   transform: translate(-50%, 0);
   z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: min(440px, calc(100% - 28px));
-  padding: 16px 16px 16px 18px;
+  padding: 10px 12px 10px 14px;
   background: rgba(28, 20, 56, 0.94);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -796,13 +797,13 @@ body {
 
 .pwa-banner-icono {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   background: linear-gradient(135deg, var(--accent-teal), var(--accent-gold));
   color: #10142a;
 }
@@ -856,7 +857,7 @@ body {
 }
 
 .pwa-banner-btn-primario {
-  padding: 10px 16px;
+  padding: 8px 14px;
   color: #241505;
   background: linear-gradient(135deg, var(--accent-gold), #ffb347);
   box-shadow: 0 8px 18px rgba(255, 209, 102, 0.3);
@@ -885,8 +886,8 @@ body {
 @media (max-width: 480px) {
   .pwa-banner {
     width: calc(100% - 20px);
-    padding: 14px;
-    gap: 12px;
+    padding: 10px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
